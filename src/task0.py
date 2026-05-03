@@ -3,9 +3,8 @@ import collections
 import heapq
 import math
 
-INPUT_CSV = "data/total.csv"
-df = pd.read_csv(INPUT_CSV, dtype=str).fillna("")
-
+CSV = "data/total.csv"
+df = pd.read_csv(CSV, dtype=str).fillna("")
 
 def build_graph(df):
     adj = collections.defaultdict(list)
@@ -55,7 +54,6 @@ def reconstruct_path(prev, source, target):
     path.reverse()
     return path
 
-
 def number_of_nodes(df):
     return len(set(df["station_a"]).union(set(df["station_b"])))
 
@@ -74,13 +72,15 @@ def number_of_components(df):
     return components
 
 def only_path(df):
-    src, dst = "Ahlbeck_Grenze", "Peenemunde"
+    src="Ahlbeck_Grenze"
+    dst = "Peenemunde"
     adj = build_graph(df)
-    _, prev = dijkstra(adj, src)
+    x, prev = dijkstra(adj, src)
     return reconstruct_path(prev, src, dst)
 
 def length_of_path(df):
-    src, dst = "Ahlbeck_Grenze", "Peenemunde"
+    src="Ahlbeck_Grenze"
+    dst = "Peenemunde"
     adj = build_graph(df)
     dist, _ = dijkstra(adj, src)
     return dist[dst]
@@ -101,8 +101,8 @@ def shortest_path(df):
         return results
 
     all_lengths = dfs(src, dst, {src}, 0.0)
-    return min(all_lengths) if all_lengths else math.inf
-
+    if all_lengths: return min(all_lengths)
+    else: return math.inf
 
 if __name__ == "__main__":
     print("TASK 0")

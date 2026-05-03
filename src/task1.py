@@ -1,9 +1,8 @@
 import pandas as pd
 import collections
 
-INPUT_CSV = "data/total.csv"
-df = pd.read_csv(INPUT_CSV, dtype=str).fillna("")
-
+CSV = "data/total.csv"
+df = pd.read_csv(CSV, dtype=str).fillna("")
 
 def build_graph(df):
     adj = collections.defaultdict(list)
@@ -12,7 +11,6 @@ def build_graph(df):
         adj[u].append((v, d))
         adj[v].append((u, d))
     return adj
-
 
 def average_degree(df):
     nodes = set(df["station_a"]).union(set(df["station_b"]))
@@ -61,18 +59,14 @@ def number_of_local_bridges(df):
             count += 1
     return count
 
-
 if __name__ == "__main__":
     import os
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-
     os.makedirs("outputs", exist_ok=True)
-
     print("TASK 1")
     print(f"  Average degree          : {average_degree(df):.6f}")
-
     adj_t = collections.defaultdict(list)
     for _, row in df.iterrows():
         adj_t[row["station_a"]].append(row["station_b"])
@@ -90,7 +84,6 @@ if __name__ == "__main__":
     plt.tight_layout()
     plt.savefig("outputs/task1.png", dpi=150)
     plt.close()
-
     print(f"  Degree distribution     : {dict(zip(x, y))}")
     print(f"  Bridges                 : {number_of_bridges(df)}")
     print(f"  Local bridges           : {number_of_local_bridges(df)}")
