@@ -1,9 +1,8 @@
 import pandas as pd
 import collections
 
-INPUT_CSV = "data/belgium.csv"
-df = pd.read_csv(INPUT_CSV, dtype=str).fillna("")
-
+CSV = "data/belgium.csv"
+df = pd.read_csv(CSV, dtype=str).fillna("")
 
 def build_graph(df):
     adj = collections.defaultdict(list)
@@ -41,7 +40,8 @@ def score(df, station):
 def gain_from_split(df, station_a, station_b):
     adj, edge_dist = build_graph(df)
     key = (station_a, station_b) if (station_a, station_b) in edge_dist else (station_b, station_a)
-    if key not in edge_dist: return 0.0
+    if key not in edge_dist:
+        return 0.0
     u, v = key
     d = edge_dist[(u, v)]
     scores = _get_scores(df)
@@ -68,8 +68,18 @@ def gain_from_split(df, station_a, station_b):
             for i, d_ni in mod_adj[node]
         )
         return dn * outer
-
-    gain = node_score(u) + node_score(v) + node_score(M) - old_u - old_v
+    
+    affected = set()
+    affected.add(u)
+    affected.add(v)
+    affected.add(M)
+    for nb, _ in mod_adj[u]:
+        affected.add(nb)
+    for nb, _ in mod_adj[v]:
+        affected.add(nb)
+    new_total = sum(node_score(n) for n in affected)
+    old_total = sum(scores.get(n, 0.0) for n in affected if n != M)
+    gain = new_total - old_total
     return (gain / total_old) * d * 100
 
 

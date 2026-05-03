@@ -3,9 +3,8 @@ import collections
 import heapq
 import math
 
-INPUT_CSV = "data/belgium.csv"
-df = pd.read_csv(INPUT_CSV, dtype=str).fillna("")
-
+CSV = "data/belgium.csv"
+df = pd.read_csv(CSV, dtype=str).fillna("")
 
 def build_graph(df):
     adj = collections.defaultdict(list)
@@ -19,7 +18,6 @@ def _all_betweenness(df):
     adj = build_graph(df)
     nodes = list(adj.keys())
     bc = {n: 0.0 for n in nodes}
-
     for s in nodes:
         dist  = {n: math.inf for n in nodes}
         sigma = {n: 0 for n in nodes}
@@ -29,7 +27,6 @@ def _all_betweenness(df):
         heap = [(0.0, s)]
         visited = set()
         order = []
-
         while heap:
             d, u = heapq.heappop(heap)
             if u in visited:
